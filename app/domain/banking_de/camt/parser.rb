@@ -81,10 +81,10 @@ class BankingDe::Camt::Parser
       credit: text(node, "CdtDbtInd") == "CRDT",
       booked: [nil, "BOOK"].include?(text(node, "Sts/Cd") || text(node, "Sts")),
       reversal: text(node, "RvslInd") == "true",
-      domain_code: text(node, "BkTxCd/Domn/Cd"),
-      family_code: text(node, "BkTxCd/Domn/Fmly/Cd"),
-      sub_family_code: text(node, "BkTxCd/Domn/Fmly/SubFmlyCd"),
-      proprietary_code: text(node, "BkTxCd/Prtry/Cd"),
+      domain_code: code(node, "Domn/Cd"),
+      family_code: code(node, "Domn/Fmly/Cd"),
+      sub_family_code: code(node, "Domn/Fmly/SubFmlyCd"),
+      proprietary_code: code(node, "Prtry/Cd"),
       details: node.xpath("NtryDtls/TxDtls").map { |tx| detail(tx) }
     )
   end
@@ -102,6 +102,12 @@ class BankingDe::Camt::Parser
       payment_information_id: text(node, "Refs/PmtInfId"),
       return_reason: text(node, "RtrInf/Rsn/Cd")
     )
+  end
+
+  # Bank transaction code of the entry; some banks (e.g. Sparkasse) only fill it in the
+  # transaction details
+  def code(node, path)
+    text(node, "BkTxCd/#{path}") || text(node, "NtryDtls/TxDtls[1]/BkTxCd/#{path}")
   end
 
   def balance(node, types)

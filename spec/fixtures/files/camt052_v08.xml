@@ -81,7 +81,7 @@
           </TxDtls>
         </NtryDtls>
       </Ntry>
-      <!-- collected direct debit batch: only the sum -->
+      <!-- collected direct debit batch: only the sum; codes only in the details (as Sparkasse) -->
       <Ntry>
         <Amt Ccy="EUR">255.00</Amt>
         <CdtDbtInd>CRDT</CdtDbtInd>
@@ -89,12 +89,13 @@
         <BookgDt><Dt>2026-04-15</Dt></BookgDt>
         <ValDt><Dt>2026-04-15</Dt></ValDt>
         <AcctSvcrRef>2026-04-15-04.00.00.000003</AcctSvcrRef>
-        <BkTxCd>
-          <Domn><Cd>PMNT</Cd><Fmly><Cd>IDDT</Cd><SubFmlyCd>ESDD</SubFmlyCd></Fmly></Domn>
-          <Prtry><Cd>NDDT+192+9309+997</Cd><Issr>DK</Issr></Prtry>
-        </BkTxCd>
+        <BkTxCd/>
         <NtryDtls>
           <TxDtls>
+            <BkTxCd>
+              <Domn><Cd>PMNT</Cd><Fmly><Cd>IDDT</Cd><SubFmlyCd>ESDD</SubFmlyCd></Fmly></Domn>
+              <Prtry><Cd>NDDT+192+9309+997</Cd><Issr>DK</Issr></Prtry>
+            </BkTxCd>
             <Refs><PmtInfId>PMTINF-TEST-2026-1</PmtInfId></Refs>
             <Amt Ccy="EUR">255.00</Amt>
             <RltdPties>
@@ -113,12 +114,13 @@
         <BookgDt><Dt>2026-04-15</Dt></BookgDt>
         <ValDt><Dt>2026-04-15</Dt></ValDt>
         <AcctSvcrRef>2026-04-15-00.06.15.000004</AcctSvcrRef>
-        <BkTxCd>
-          <Domn><Cd>PMNT</Cd><Fmly><Cd>IDDT</Cd><SubFmlyCd>UPDD</SubFmlyCd></Fmly></Domn>
-          <Prtry><Cd>NRTI+109+9250+901</Cd><Issr>DK</Issr></Prtry>
-        </BkTxCd>
+        <BkTxCd/>
         <NtryDtls>
           <TxDtls>
+            <BkTxCd>
+              <Domn><Cd>PMNT</Cd><Fmly><Cd>IDDT</Cd><SubFmlyCd>UPDD</SubFmlyCd></Fmly></Domn>
+              <Prtry><Cd>NRTI+109+9250+901</Cd><Issr>DK</Issr></Prtry>
+            </BkTxCd>
             <Refs><MndtId>MANDATE-0001</MndtId></Refs>
             <Amt Ccy="EUR">105.00</Amt>
             <RltdPties>

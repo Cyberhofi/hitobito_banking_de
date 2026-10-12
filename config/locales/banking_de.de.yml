@@ -1,0 +1,236 @@
+#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+#  hitobito_banking_de and licensed under the Affero General Public License version 3
+#  or later. See the LICENSE file at the top-level directory.
+
+de:
+  activerecord:
+    models:
+      banking_de/bank_account:
+        one: Bankverbindung
+        other: Bankverbindungen
+      banking_de/booking:
+        one: Buchung
+        other: Buchungen
+      banking_de/allocation:
+        one: Zuordnung
+        other: Zuordnungen
+    attributes:
+      banking_de/bank_account:
+        iban: IBAN
+        account_holder: Kontoinhaber*in
+        mandate_reference: Mandatsreferenz
+        mandate_signed_on: Mandat erteilt am
+        mandate_revoked_on: Mandat widerrufen am
+        last_return_reason: Letzte Rücklastschrift
+      banking_de/allocation:
+        person: Person
+        purpose: Zweck
+        year: Jahr
+        amount: Betrag
+    errors:
+      models:
+        banking_de/bank_account:
+          attributes:
+            mandate_revoked_on:
+              before_signed: darf nicht vor der Erteilung liegen
+
+  banking_de:
+    tabs:
+      bookings: Kontoimport
+    levels:
+      sure: sicher
+      likely: wahrscheinlich
+      possible: möglich
+    reasons:
+      iban: bekannte IBAN
+      mandate: Mandatsreferenz
+      member_number: Mitgliedsnummer
+      last_name: Nachname
+      first_name: Vorname
+    kinds:
+      transfer: Überweisung
+      direct_debit: Lastschrift
+      direct_debit_batch: Sammellastschrift
+      return: Rücklastschrift
+    mandate_states:
+      none: kein Mandat
+      active: Mandat aktiv
+      revoked: Mandat widerrufen
+      blocked: Mandat prüfen
+    return_reasons:
+      AC01: IBAN fehlerhaft
+      AC04: Konto aufgelöst
+      AC06: Konto gesperrt
+      AC13: Ungültiger Kontotyp
+      AG01: Lastschrift für dieses Konto nicht erlaubt
+      AM04: Deckung unzureichend
+      AM05: Doppelte Einreichung
+      BE05: Gläubiger unbekannt
+      MD01: Kein Mandat
+      MD02: Mandatsdaten fehlen oder sind fehlerhaft
+      MD06: Rückgabe auf Verlangen des Zahlers
+      MD07: Kontoinhaber verstorben
+      MS02: Abgelehnt durch den Zahler
+      MS03: Sonstiger Grund
+      SL01: Sperre durch den Zahler
+    statement_import:
+      errors:
+        too_large: "%{file}: Datei ist zu groß."
+        too_many_files: "%{file}: Das ZIP enthält zu viele Dateien."
+        invalid_zip: "%{file}: ZIP-Datei kann nicht gelesen werden (%{message})."
+        invalid_file: "%{file}: Kein lesbarer Kontoauszug im Format camt.052/camt.053 (%{message})."
+        no_iban: "%{file}: Der Kontoauszug enthält keine IBAN des Kontos."
+
+    bookings:
+      index:
+        title: Kontoimport
+        upload: Kontoauszug hochladen
+        statements: Kontoauszüge
+        states:
+          open: Offen
+          done: Zugeordnet
+          ignored: Ignoriert
+          all: Alle
+        empty: Keine Buchungen.
+        date: Datum
+        amount: Betrag
+        payer: Zahler*in
+        remittance: Verwendungszweck
+        suggestion: Vorschlag
+        result: Zuordnung
+      row:
+        no_suggestion: kein eindeutiger Vorschlag
+        ignored: ignoriert
+        confirm: Bestätigen
+        confirm_title: Vorschlag ohne Änderung übernehmen
+        edit: Zuordnen
+        show: Anzeigen
+      show:
+        title: "Buchung vom %{date} über %{amount}"
+        back: Zurück zur Liste
+        batch_hint: >-
+          Sammellastschrift: Der Kontoauszug enthält nur die Summe, nicht die einzelnen
+          Lastschriften. Diese Buchung kann hier nicht Personen zugeordnet werden. Bitte
+          ignorieren (z. B. mit Hinweis auf den Einzug).
+        ignored: Ignoriert
+        processed: "Bearbeitet von %{person} am %{time}"
+        reopen: Wieder öffnen
+      details:
+        booking_date: Buchungstag
+        amount: Betrag
+        payer: Zahler*in
+        iban: IBAN
+        remittance: Verwendungszweck
+        mandate_reference: Mandatsreferenz
+        end_to_end_id: End-to-End-Referenz
+        return_reason: Rückgabegrund
+        payment_information_id: Sammler-Referenz
+        account: Eigenes Konto
+      candidates:
+        title: Vorschläge
+        none: Keine passende Person gefunden. Bitte unten auswählen.
+      allocation_form:
+        title: Zuordnen
+        title_return: Rücklastschrift zuordnen
+        hint: >-
+          Betrag auf Personen, Zweck und Jahr verteilen. Mehrere Jahre oder Personen in
+          eigenen Zeilen. Zeilen ohne Person werden nicht gespeichert.
+        hint_return: >-
+          Die Rücklastschrift wird mit negativem Betrag gebucht und macht die Zahlung für das
+          gewählte Jahr rückgängig.
+        person: Person
+        purpose: Zweck
+        year: Jahr
+        amount: Betrag
+        note: Bemerkung (optional)
+        submit: Zuordnung speichern
+      ignore_form:
+        title: Keine Zuordnung
+        hint: Für Zahlungen, die nicht zu Personen gehören (z. B. Kurse, Spenden, Zuschüsse).
+        note_placeholder: Bemerkung, z. B. „Kursgebühr“
+        submit: Ignorieren
+      allocations:
+        title: Zuordnung
+        processed: "Bestätigt von %{person} am %{time}"
+        revert: Zuordnung zurücknehmen
+        revert_confirm: Zuordnung zurücknehmen? Die Änderungen bei den Personen werden rückgängig gemacht.
+      form:
+        suggested: Vorschläge
+        all_people: Alle Personen
+      allocate:
+        success: "Buchung %{booking} zugeordnet."
+      revert:
+        success: Zuordnung zurückgenommen.
+      ignore:
+        success: "Buchung %{booking} ignoriert."
+      reopen:
+        success: Buchung wieder geöffnet.
+      errors:
+        not_allocatable: Diese Buchung kann nicht (mehr) zugeordnet werden.
+        no_rows: Bitte mindestens eine Person auswählen.
+        not_done: Diese Buchung ist nicht zugeordnet.
+        not_open: Diese Buchung ist nicht offen.
+        not_ignored: Diese Buchung ist nicht ignoriert.
+
+    statements:
+      index:
+        title: Kontoauszüge
+        upload: Kontoauszug hochladen
+        bookings: Zurück zum Kontoimport
+        empty: Noch keine Kontoauszüge importiert.
+        period: Zeitraum
+        account: Konto
+        opening_balance: Anfangssaldo
+        closing_balance: Endsaldo
+        file: Datei
+        imported: Importiert
+      new:
+        title: Kontoauszug hochladen
+        files: Dateien (XML oder ZIP)
+        submit: Hochladen
+        hint_format: >-
+          Unterstützt werden Kontoauszüge im Format camt.052 und camt.053 (z. B. Sparkasse:
+          „XML (CAMT V8 – gebuchte Umsätze)“). Mehrere Dateien oder ein ZIP mit allen
+          Tagesdateien können auf einmal hochgeladen werden.
+        hint_duplicates: >-
+          Bereits importierte Buchungen werden erkannt und übersprungen. Zeiträume dürfen sich
+          deshalb überschneiden.
+        hint_privacy: >-
+          Gespeichert werden nur Zahlungseingänge und Rücklastschriften. Ausgaben werden nicht
+          übernommen. Beim Hochladen wird noch nichts gebucht.
+      create:
+        no_file: Bitte eine Datei auswählen.
+        summary: >-
+          %{files} Datei(en) gelesen: %{bookings} neue Buchungen, %{duplicate_bookings} bereits
+          vorhanden, %{skipped_entries} nicht relevant (Ausgaben u. ä.).
+          %{duplicate_reports} Auszüge waren schon importiert.
+      gaps:
+        latest: "Letzter Stand %{account}: %{date}, Saldo %{balance}"
+        title: Möglicherweise fehlen Kontoauszüge
+        gap: "%{account}: zwischen %{after} und %{before} passt der Saldo nicht zusammen."
+
+    bank_accounts:
+      edit:
+        title: "Bankverbindung von %{person}"
+        mandate: SEPA-Lastschriftmandat
+        mandate_hint: >-
+          Nur mit Mandatsreferenz und Datum der Erteilung kann eingezogen werden. Ein
+          widerrufenes Mandat bleibt zur Nachvollziehbarkeit gespeichert.
+        last_return: "Rücklastschrift am %{date}: %{reason}"
+        clear_return: Erledigt (z. B. neue Bankverbindung geprüft)
+        destroy: Bankverbindung löschen
+        destroy_confirm: Bankverbindung und Mandat dieser Person löschen?
+      update:
+        success: Bankverbindung gespeichert.
+      destroy:
+        success: Bankverbindung gelöscht.
+
+  people:
+    show_right_banking_de:
+      edit: Bearbeiten
+      mandate: Lastschrift
+      signed_on: "vom %{date}"
+      revoked_on: "(widerrufen am %{date})"
+      last_return: Rücklastschrift
+      none: Keine Bankverbindung hinterlegt.
+      payments: Letzte Zahlungen

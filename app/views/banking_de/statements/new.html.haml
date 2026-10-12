@@ -1,0 +1,20 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- title t('.title')
+
+.row
+  .col-lg-6
+    = form_tag(group_bank_statements_path(group), multipart: true, data: {turbo: false}) do
+      .mb-3
+        = label_tag('bank_statement_files', t('.files'), class: 'form-label')
+        = file_field_tag('bank_statement[files][]', id: 'bank_statement_files', multiple: true, accept: '.xml,.zip,application/xml,text/xml,application/zip', class: 'form-control')
+      .btn-toolbar
+        = submit_tag(t('.submit'), class: 'btn btn-primary me-2')
+        = cancel_link(group_bank_bookings_path(group))
+  .col-lg-6
+    .well.help
+      %p= t('.hint_format')
+      %p= t('.hint_duplicates')
+      %p= t('.hint_privacy')

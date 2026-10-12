@@ -1,0 +1,27 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- title t('.title', person: person)
+
+= standard_form(entry, url: group_person_bank_account_path(group, person), method: :patch, as: :bank_account) do |f|
+  = f.error_messages
+  = f.labeled_input_fields :iban, :account_holder
+
+  %h2.mt-4= t('.mandate')
+  %p.text-muted= t('.mandate_hint')
+  = f.labeled_input_field :mandate_reference
+  = f.labeled_input_field :mandate_signed_on
+  = f.labeled_input_field :mandate_revoked_on
+
+  - if entry.last_return_reason
+    = f.labeled(:last_return_reason) do
+      .text-danger= t('.last_return', reason: banking_de_return_reason(entry.last_return_reason), date: l(entry.last_return_on))
+      = label_tag('bank_account_clear_return', class: 'form-check-label mt-1') do
+        = check_box_tag('bank_account[clear_return]', '1', false, id: 'bank_account_clear_return', class: 'form-check-input')
+        = t('.clear_return')
+
+  = form_buttons(f, cancel_url: group_person_path(group, person))
+
+- if entry.persisted?
+  = button_to(t('.destroy'), group_person_bank_account_path(group, person), method: :delete, class: 'btn btn-sm btn-outline-danger mt-3', form: {data: {turbo_confirm: t('.destroy_confirm')}})

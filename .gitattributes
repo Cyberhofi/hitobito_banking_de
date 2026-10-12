@@ -1,0 +1,4 @@
+# Immer LF-Zeilenenden, auch bei Checkout unter Windows (das Image läuft unter Linux)
+* text=auto eol=lf
+*.png binary
+*.ico binary

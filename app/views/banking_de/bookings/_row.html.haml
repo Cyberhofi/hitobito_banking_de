@@ -1,0 +1,48 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- candidate = booking.open? && !booking.batch? ? suggestion.best(booking) : nil
+- rows = candidate ? suggestion.rows(booking) : []
+%tr
+  %td.text-nowrap= l(booking.booking_date)
+  %td.text-end.text-nowrap{class: ('text-danger' if booking.return?)}
+    = banking_de_amount(booking.return? ? -booking.amount : booking.amount)
+  %td
+    = booking.counterparty_name
+    - if booking.counterparty_iban
+      %br
+      %small.text-muted= banking_de_iban(booking.counterparty_iban, masked: true)
+  %td
+    - unless booking.kind == 'transfer'
+      %span.badge.bg-warning.text-dark= banking_de_kind(booking)
+    = booking.remittance_information
+  %td
+    - if booking.open? && !booking.batch?
+      - if candidate
+        = banking_de_level_badge(candidate)
+        %strong= candidate.person.to_s(:list)
+        %br
+        %small= banking_de_rows_summary(rows)
+      - else
+        %span.text-muted= t('.no_suggestion')
+    - elsif booking.done?
+      - booking.allocations.each do |allocation|
+        %div
+          = allocation.person.to_s(:list)
+          %small.text-muted
+            = [allocation.purpose_definition&.label, allocation.year, banking_de_amount(allocation.amount)].compact.join(' ')
+    - elsif booking.ignored?
+      %span.text-muted= booking.note.presence || t('.ignored')
+  %td.text-nowrap.text-end
+    - if candidate
+      = form_tag(allocate_group_bank_booking_path(group, booking), class: 'd-inline') do
+        = hidden_field_tag :return_to, 'index'
+        - rows.each_with_index do |row, i|
+          - next unless row.person_id
+          = hidden_field_tag "rows[#{i}][person_id]", row.person_id
+          = hidden_field_tag "rows[#{i}][purpose]", row.purpose
+          = hidden_field_tag "rows[#{i}][year]", row.year
+          = hidden_field_tag "rows[#{i}][amount]", row.amount
+        = submit_tag(t('.confirm'), class: 'btn btn-sm btn-primary', title: t('.confirm_title'))
+    = link_to(booking.open? ? t('.edit') : t('.show'), group_bank_booking_path(group, booking), class: 'btn btn-sm btn-outline-primary')

@@ -1,0 +1,14 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- continuity.latest.each do |iban, statement|
+  %p.text-muted
+    = t('banking_de.statements.gaps.latest', account: banking_de_iban(iban), date: (statement.to_date ? l(statement.to_date) : '–'), balance: banking_de_amount(statement.closing_balance))
+- gaps = continuity.gaps
+- if gaps.any?
+  .alert.alert-warning
+    %strong= t('banking_de.statements.gaps.title')
+    %ul.mb-0
+      - gaps.each do |gap|
+        %li= t('banking_de.statements.gaps.gap', account: banking_de_iban(gap.account_iban), after: l(gap.after), before: l(gap.before))

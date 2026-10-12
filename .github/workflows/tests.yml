@@ -1,0 +1,94 @@
+name: Tests
+
+on:
+  push:
+    branches: [main, dev]
+    paths-ignore: ["**.md"]
+  pull_request:
+  schedule:
+    # Weekly against the latest hitobito core, to notice breaking core changes early
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+    inputs:
+      core_ref:
+        description: hitobito core branch, tag or commit (default master)
+        default: master
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    env:
+      RAILS_ENV: test
+      RAILS_DB_ADAPTER: postgresql
+      RAILS_DB_HOST: 127.0.0.1
+      RAILS_DB_PORT: 5432
+      RAILS_DB_USERNAME: hitobito
+      RAILS_DB_PASSWORD: hitobito
+      RAILS_DB_NAME: hitobito_development
+      RAILS_TEST_DB_NAME: hitobito_test
+      NO_COVERAGE: "1"
+      TZ: Europe/Berlin
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: hitobito
+          POSTGRES_PASSWORD: hitobito
+          POSTGRES_DB: hitobito_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U hitobito"
+          --health-interval 10s --health-timeout 5s --health-retries 10
+
+    steps:
+      - name: Check out hitobito core
+        uses: actions/checkout@v4
+        with:
+          repository: hitobito/hitobito
+          ref: ${{ inputs.core_ref || 'master' }}
+          path: hitobito
+
+      - name: Check out this wagon
+        uses: actions/checkout@v4
+        with:
+          path: hitobito_banking_de
+
+      - name: Compose core and wagon
+        run: |
+          cp hitobito/Wagonfile.ci hitobito/Wagonfile
+          cp hitobito/Gemfile.lock hitobito_banking_de/Gemfile.lock
+          echo "RUBY_VERSION=$(cat hitobito/.ruby-version)" >> "$GITHUB_ENV"
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ env.RUBY_VERSION }}
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq libvips42
+          npm install -g yarn@1.22.19
+          (cd hitobito && bundle install --jobs 4 && yarn install --frozen-lockfile)
+          (cd hitobito_banking_de && bundle install --jobs 4)
+
+      - name: Build assets
+        working-directory: hitobito
+        run: bundle exec rake assets:build
+
+      - name: Prepare test database
+        working-directory: hitobito_banking_de
+        run: SKIP_CSS_BUILD=1 SKIP_JS_BUILD=1 bundle exec rake db:test:prepare db:migrate
+
+      - name: RSpec
+        working-directory: hitobito_banking_de
+        run: bundle exec rspec
+
+      - name: RuboCop
+        working-directory: hitobito_banking_de
+        run: bundle exec rubocop

@@ -1,0 +1,31 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+%h2= banking_de_kind(booking)
+%dl.row
+  %dt.col-5= t('.booking_date')
+  %dd.col-7= l(booking.booking_date)
+  %dt.col-5= t('.amount')
+  %dd.col-7{class: ('text-danger' if booking.return?)}
+    = banking_de_amount(booking.return? ? -booking.amount : booking.amount)
+  %dt.col-5= t('.payer')
+  %dd.col-7= booking.counterparty_name.presence || '–'
+  %dt.col-5= t('.iban')
+  %dd.col-7= booking.counterparty_iban ? banking_de_iban(booking.counterparty_iban) : '–'
+  %dt.col-5= t('.remittance')
+  %dd.col-7= booking.remittance_information.presence || '–'
+  - if booking.mandate_reference
+    %dt.col-5= t('.mandate_reference')
+    %dd.col-7= booking.mandate_reference
+  - if booking.end_to_end_id
+    %dt.col-5= t('.end_to_end_id')
+    %dd.col-7= booking.end_to_end_id
+  - if booking.return_reason
+    %dt.col-5= t('.return_reason')
+    %dd.col-7.text-danger= banking_de_return_reason(booking.return_reason)
+  - if booking.payment_information_id
+    %dt.col-5= t('.payment_information_id')
+    %dd.col-7= booking.payment_information_id
+  %dt.col-5= t('.account')
+  %dd.col-7= banking_de_iban(booking.account_iban)

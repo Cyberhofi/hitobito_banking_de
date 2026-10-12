@@ -1,0 +1,29 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- title t('.title', date: l(@booking.booking_date), amount: banking_de_amount(@booking.return? ? -@booking.amount : @booking.amount))
+
+- content_for(:toolbar) do
+  = action_button(t('.back'), group_bank_bookings_path(group, state: @booking.state), :'arrow-left')
+
+.row
+  .col-lg-5
+    = render 'details', booking: @booking
+  .col-lg-7
+    - if @booking.batch? && @booking.open?
+      .alert.alert-info= t('.batch_hint')
+      = render 'ignore_form', booking: @booking
+    - elsif @booking.open?
+      = render 'candidates', booking: @booking
+      = render 'allocation_form', booking: @booking
+      = render 'ignore_form', booking: @booking
+    - elsif @booking.done?
+      = render 'allocations', booking: @booking
+    - else
+      %h2= t('.ignored')
+      - if @booking.note.present?
+        %p= @booking.note
+      - if @booking.processed_at
+        %p.text-muted= t('.processed', person: @booking.processed_by, time: l(@booking.processed_at, format: :short))
+      = button_to(t('.reopen'), reopen_group_bank_booking_path(group, @booking), class: 'btn btn-outline-primary')

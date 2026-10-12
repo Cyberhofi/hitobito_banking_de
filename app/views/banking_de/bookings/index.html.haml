@@ -1,0 +1,38 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- title t('.title')
+
+- content_for(:toolbar) do
+  = action_button(t('.upload'), new_group_bank_statement_path(group), :upload)
+  = action_button(t('.statements'), group_bank_statements_path(group), :list)
+
+= render 'banking_de/statements/gaps'
+
+%ul.nav.nav-tabs.mb-3
+  - BankingDe::BookingsController::STATES.each do |s|
+    %li.nav-item
+      = link_to(group_bank_bookings_path(group, state: s), class: ['nav-link', ('active' if s == state)]) do
+        = t(".states.#{s}")
+        - unless s == 'all'
+          %span.badge.bg-secondary= counts[s].to_i
+
+- if @bookings.empty?
+  %p.text-muted= t('.empty')
+- else
+  .table-responsive
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= t('.date')
+          %th.text-end= t('.amount')
+          %th= t('.payer')
+          %th= t('.remittance')
+          %th= state == 'open' ? t('.suggestion') : t('.result')
+          %th
+      %tbody
+        - @bookings.each do |booking|
+          = render 'row', booking: booking
+
+  = paginate @bookings

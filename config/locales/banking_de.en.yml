@@ -1,0 +1,233 @@
+#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+#  hitobito_banking_de and licensed under the Affero General Public License version 3
+#  or later. See the LICENSE file at the top-level directory.
+
+en:
+  activerecord:
+    models:
+      banking_de/bank_account:
+        one: Bank account
+        other: Bank accounts
+      banking_de/booking:
+        one: Booking
+        other: Bookings
+      banking_de/allocation:
+        one: Allocation
+        other: Allocations
+    attributes:
+      banking_de/bank_account:
+        iban: IBAN
+        account_holder: Account holder
+        mandate_reference: Mandate reference
+        mandate_signed_on: Mandate signed on
+        mandate_revoked_on: Mandate revoked on
+        last_return_reason: Last returned direct debit
+      banking_de/allocation:
+        person: Person
+        purpose: Purpose
+        year: Year
+        amount: Amount
+    errors:
+      models:
+        banking_de/bank_account:
+          attributes:
+            mandate_revoked_on:
+              before_signed: must not be before the signing date
+
+  banking_de:
+    tabs:
+      bookings: Bank import
+    levels:
+      sure: sure
+      likely: likely
+      possible: possible
+    reasons:
+      iban: known IBAN
+      mandate: mandate reference
+      member_number: member number
+      last_name: last name
+      first_name: first name
+    kinds:
+      transfer: Credit transfer
+      direct_debit: Direct debit
+      direct_debit_batch: Direct debit batch
+      return: Returned direct debit
+    mandate_states:
+      none: no mandate
+      active: mandate active
+      revoked: mandate revoked
+      blocked: check mandate
+    return_reasons:
+      AC01: Incorrect IBAN
+      AC04: Account closed
+      AC06: Account blocked
+      AC13: Invalid account type
+      AG01: Direct debit not allowed on this account
+      AM04: Insufficient funds
+      AM05: Duplicate collection
+      BE05: Unknown creditor
+      MD01: No mandate
+      MD02: Missing or incorrect mandate data
+      MD06: Refund requested by the debtor
+      MD07: Account holder deceased
+      MS02: Refused by the debtor
+      MS03: Reason not specified
+      SL01: Blocked by the debtor
+    statement_import:
+      errors:
+        too_large: "%{file}: file is too large."
+        too_many_files: "%{file}: the ZIP contains too many files."
+        invalid_zip: "%{file}: ZIP file cannot be read (%{message})."
+        invalid_file: "%{file}: no readable camt.052/camt.053 statement (%{message})."
+        no_iban: "%{file}: the statement contains no IBAN of the account."
+
+    bookings:
+      index:
+        title: Bank import
+        upload: Upload statement
+        statements: Statements
+        states:
+          open: Open
+          done: Allocated
+          ignored: Ignored
+          all: All
+        empty: No bookings.
+        date: Date
+        amount: Amount
+        payer: Payer
+        remittance: Remittance information
+        suggestion: Suggestion
+        result: Allocation
+      row:
+        no_suggestion: no clear suggestion
+        ignored: ignored
+        confirm: Confirm
+        confirm_title: Accept the suggestion unchanged
+        edit: Allocate
+        show: Show
+      show:
+        title: "Booking of %{date}, %{amount}"
+        back: Back to the list
+        batch_hint: >-
+          Direct debit batch: the statement only contains the sum, not the single direct
+          debits. This booking cannot be allocated to people here. Please ignore it.
+        ignored: Ignored
+        processed: "Processed by %{person} at %{time}"
+        reopen: Reopen
+      details:
+        booking_date: Booking date
+        amount: Amount
+        payer: Payer
+        iban: IBAN
+        remittance: Remittance information
+        mandate_reference: Mandate reference
+        end_to_end_id: End-to-end reference
+        return_reason: Return reason
+        payment_information_id: Batch reference
+        account: Own account
+      candidates:
+        title: Suggestions
+        none: No matching person found. Please select below.
+      allocation_form:
+        title: Allocate
+        title_return: Allocate returned direct debit
+        hint: >-
+          Split the amount into people, purposes and years. Several years or people in
+          separate rows. Rows without a person are not saved.
+        hint_return: >-
+          The returned direct debit is booked with a negative amount and undoes the payment
+          for the selected year.
+        person: Person
+        purpose: Purpose
+        year: Year
+        amount: Amount
+        note: Note (optional)
+        submit: Save allocation
+      ignore_form:
+        title: No allocation
+        hint: For payments that do not belong to people (e.g. courses, donations, grants).
+        note_placeholder: Note, e.g. "course fee"
+        submit: Ignore
+      allocations:
+        title: Allocation
+        processed: "Confirmed by %{person} at %{time}"
+        revert: Take back allocation
+        revert_confirm: Take back the allocation? The changes at the people are undone.
+      form:
+        suggested: Suggestions
+        all_people: All people
+      allocate:
+        success: "Booking %{booking} allocated."
+      revert:
+        success: Allocation taken back.
+      ignore:
+        success: "Booking %{booking} ignored."
+      reopen:
+        success: Booking reopened.
+      errors:
+        not_allocatable: This booking cannot be allocated (anymore).
+        no_rows: Please select at least one person.
+        not_done: This booking is not allocated.
+        not_open: This booking is not open.
+        not_ignored: This booking is not ignored.
+
+    statements:
+      index:
+        title: Statements
+        upload: Upload statement
+        bookings: Back to bank import
+        empty: No statements imported yet.
+        period: Period
+        account: Account
+        opening_balance: Opening balance
+        closing_balance: Closing balance
+        file: File
+        imported: Imported
+      new:
+        title: Upload statement
+        files: Files (XML or ZIP)
+        submit: Upload
+        hint_format: >-
+          Account reports and statements in the formats camt.052 and camt.053 are supported.
+          Several files or a ZIP with all daily files can be uploaded at once.
+        hint_duplicates: >-
+          Bookings already imported are recognized and skipped, so periods may overlap.
+        hint_privacy: >-
+          Only incoming payments and returned direct debits are stored, no outgoing payments.
+          Nothing is booked when uploading.
+      create:
+        no_file: Please select a file.
+        summary: >-
+          %{files} file(s) read: %{bookings} new bookings, %{duplicate_bookings} already
+          present, %{skipped_entries} not relevant (outgoing payments etc.).
+          %{duplicate_reports} statements were already imported.
+      gaps:
+        latest: "Latest state %{account}: %{date}, balance %{balance}"
+        title: Statements may be missing
+        gap: "%{account}: the balance does not match between %{after} and %{before}."
+
+    bank_accounts:
+      edit:
+        title: "Bank account of %{person}"
+        mandate: SEPA direct debit mandate
+        mandate_hint: >-
+          Direct debits can only be collected with a mandate reference and signing date. A
+          revoked mandate stays stored for traceability.
+        last_return: "Returned direct debit on %{date}: %{reason}"
+        clear_return: Done (e.g. new bank account checked)
+        destroy: Delete bank account
+        destroy_confirm: Delete bank account and mandate of this person?
+      update:
+        success: Bank account saved.
+      destroy:
+        success: Bank account deleted.
+
+  people:
+    show_right_banking_de:
+      edit: Edit
+      mandate: Direct debit
+      signed_on: "of %{date}"
+      revoked_on: "(revoked on %{date})"
+      last_return: Returned direct debit
+      none: No bank account stored.
+      payments: Latest payments

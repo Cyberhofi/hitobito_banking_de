@@ -1,0 +1,47 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- if can?(:show_bank_account, entry)
+  - account = entry.banking_de_bank_account
+  %section.banking-de-bank-account
+    %h2
+      = BankingDe::BankAccount.model_name.human
+      - if can?(:update_bank_account, entry)
+        = link_to(t('people.show_right_banking_de.edit'), edit_group_person_bank_account_path(@group, entry), class: 'small ms-2')
+    - if account
+      %table.table.table-sm.table-borderless.mb-1
+        %tr
+          %th= BankingDe::BankAccount.human_attribute_name(:iban)
+          %td= banking_de_iban(account.iban)
+        - if account.account_holder
+          %tr
+            %th= BankingDe::BankAccount.human_attribute_name(:account_holder)
+            %td= account.account_holder
+        %tr
+          %th= t('people.show_right_banking_de.mandate')
+          %td
+            = banking_de_mandate_state(account)
+            - if account.mandate?
+              %br
+              %small
+                = account.mandate_reference
+                = t('people.show_right_banking_de.signed_on', date: l(account.mandate_signed_on))
+                - if account.mandate_revoked_on
+                  = t('people.show_right_banking_de.revoked_on', date: l(account.mandate_revoked_on))
+        - if account.last_return_reason
+          %tr
+            %th= t('people.show_right_banking_de.last_return')
+            %td.text-danger= "#{l(account.last_return_on)}: #{banking_de_return_reason(account.last_return_reason)}"
+    - else
+      %p.text-muted= t('people.show_right_banking_de.none')
+
+    - allocations = entry.banking_de_allocations.includes(:booking).order(created_at: :desc).limit(5)
+    - if allocations.any?
+      %h3.h6.mt-2= t('people.show_right_banking_de.payments')
+      %ul.list-unstyled.small
+        - allocations.each do |allocation|
+          %li
+            = l(allocation.booking.booking_date)
+            = [allocation.purpose_definition&.label, allocation.year].compact.join(' ')
+            = banking_de_amount(allocation.amount)

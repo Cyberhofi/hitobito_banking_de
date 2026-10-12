@@ -1,0 +1,12 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+%hr
+%h2= t('.title')
+%p.text-muted= t('.hint')
+= form_tag(ignore_group_bank_booking_path(group, booking), class: 'row g-2') do
+  .col-sm-8
+    = text_field_tag(:note, nil, class: 'form-control form-control-sm', placeholder: t('.note_placeholder'), 'aria-label': t('.note_placeholder'))
+  .col-sm-4
+    = submit_tag(t('.submit'), class: 'btn btn-sm btn-outline-secondary')

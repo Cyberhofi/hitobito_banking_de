@@ -1,0 +1,16 @@
+inherit_from:
+  - ../hitobito/.rubocop.yml
+
+AllCops:
+  Exclude:
+    - Rakefile
+    - Gemfile
+    - db/**/*
+    - bin/**/*
+    - tmp/**/*
+
+# Rake task definitions are naturally one block
+Metrics/BlockLength:
+  Exclude:
+    - lib/tasks/**/*.rake
+    - spec/**/*

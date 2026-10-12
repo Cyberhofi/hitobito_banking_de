@@ -1,0 +1,15 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+%h2= t('.title')
+- candidates = suggestion.candidates(booking)
+- if candidates.empty?
+  %p.text-muted= t('.none')
+- else
+  %ul.list-unstyled
+    - candidates.each do |candidate|
+      %li.mb-1
+        = banking_de_level_badge(candidate)
+        = link_to(banking_de_person_label(candidate.person), group_person_path(group, candidate.person), target: '_blank', rel: 'noopener')
+        %small.text-muted= banking_de_reasons(candidate)

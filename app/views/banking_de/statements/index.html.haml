@@ -1,0 +1,41 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+- title t('.title')
+
+- content_for(:toolbar) do
+  = action_button(t('.upload'), new_group_bank_statement_path(group), :upload)
+  = action_button(t('.bookings'), group_bank_bookings_path(group), :'arrow-left')
+
+= render 'gaps'
+
+- if @statements.empty?
+  %p.text-muted= t('.empty')
+- else
+  .table-responsive
+    %table.table.table-striped
+      %thead
+        %tr
+          %th= t('.period')
+          %th= t('.account')
+          %th.text-end= t('.opening_balance')
+          %th.text-end= t('.closing_balance')
+          %th= t('.file')
+          %th= t('.imported')
+      %tbody
+        - @statements.each do |statement|
+          %tr
+            %td= statement.to_s
+            %td= banking_de_iban(statement.account_iban)
+            %td.text-end= banking_de_amount(statement.opening_balance)
+            %td.text-end= banking_de_amount(statement.closing_balance)
+            %td
+              = statement.filename
+              %br
+              %small.text-muted= statement.message_type
+            %td
+              = l(statement.created_at, format: :short)
+              %br
+              %small.text-muted= statement.imported_by
+  = paginate @statements

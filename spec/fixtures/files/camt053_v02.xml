@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Synthetic bank statement (camt.053.001.02). All names, IBANs and references are made up.
+     Contains the first entry of camt052_v08.xml again (overlapping export). -->
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>TEST-STMT-2026-04-16</MsgId>
+      <CreDtTm>2026-04-17T06:00:00</CreDtTm>
+    </GrpHdr>
+    <Stmt>
+      <Id>TEST-STMT-0416</Id>
+      <CreDtTm>2026-04-17T06:00:00</CreDtTm>
+      <FrToDt>
+        <FrDtTm>2026-04-16T00:00:00</FrDtTm>
+        <ToDtTm>2026-04-16T23:59:59</ToDtTm>
+      </FrToDt>
+      <Acct>
+        <Id><IBAN>DE59855500001000000000</IBAN></Id>
+      </Acct>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>PRCD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">1335.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-04-15</Dt></Dt>
+      </Bal>
+      <Bal>
+        <Tp><CdOrPrtry><Cd>CLBD</Cd></CdOrPrtry></Tp>
+        <Amt Ccy="EUR">1505.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt><Dt>2026-04-16</Dt></Dt>
+      </Bal>
+      <Ntry>
+        <Amt Ccy="EUR">85.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-04-15</Dt></BookgDt>
+        <ValDt><Dt>2026-04-15</Dt></ValDt>
+        <AcctSvcrRef>2026-04-15-10.00.00.000001</AcctSvcrRef>
+        <BkTxCd>
+          <Domn><Cd>PMNT</Cd><Fmly><Cd>RCDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <RltdPties>
+              <Dbtr><Nm>MEMBER BOTTOM</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE52120300001111111111</IBAN></Id></DbtrAcct>
+            </RltdPties>
+            <RmtInf><Ustrd>MITGLIEDSBEITRAG 2026</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+      <Ntry>
+        <Amt Ccy="EUR">170.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt><Dt>2026-04-16</Dt></BookgDt>
+        <ValDt><Dt>2026-04-16</Dt></ValDt>
+        <AcctSvcrRef>2026-04-16-09.00.00.000006</AcctSvcrRef>
+        <BkTxCd>
+          <Domn><Cd>PMNT</Cd><Fmly><Cd>RCDT</Cd><SubFmlyCd>ESCT</SubFmlyCd></Fmly></Domn>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <RltdPties>
+              <Dbtr><Nm>Erika Example</Nm></Dbtr>
+              <DbtrAcct><Id><IBAN>DE71850500002222222222</IBAN></Id></DbtrAcct>
+            </RltdPties>
+            <RmtInf><Ustrd>Jahresbeitrag 2026/27</Ustrd></RmtInf>
+          </TxDtls>
+        </NtryDtls>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

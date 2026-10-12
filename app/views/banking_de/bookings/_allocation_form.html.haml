@@ -1,0 +1,35 @@
+-#  Copyright (c) 2026, Stefan Hofmann. This file is part of
+-#  hitobito_banking_de and licensed under the Affero General Public License version 3
+-#  or later. See the LICENSE file at the top-level directory.
+
+%h2= booking.return? ? t('.title_return') : t('.title')
+%p.text-muted= booking.return? ? t('.hint_return') : t('.hint')
+
+- candidates = suggestion.candidates(booking)
+- rows = suggestion.rows(booking)
+- rows += Array.new(3) { BankingDe::Suggestion::Row.new(purpose: BankingDe.primary_purpose&.key, year: rows.first&.year) }
+
+= form_tag(allocate_group_bank_booking_path(group, booking)) do
+  .table-responsive
+    %table.table.table-sm
+      %thead
+        %tr
+          %th= t('.person')
+          %th= t('.purpose')
+          %th= t('.year')
+          %th= t('.amount')
+      %tbody
+        - rows.each_with_index do |row, i|
+          %tr
+            %td{style: 'min-width: 16em'}
+              = select_tag("rows[#{i}][person_id]", banking_de_person_options(people, candidates, row.person_id), include_blank: true, class: 'form-select form-select-sm', data: {controller: 'tom-select'}, 'aria-label': t('.person'))
+            %td
+              = select_tag("rows[#{i}][purpose]", banking_de_purpose_options(row.purpose), class: 'form-select form-select-sm', 'aria-label': t('.purpose'))
+            %td{style: 'width: 7em'}
+              = number_field_tag("rows[#{i}][year]", row.year, class: 'form-control form-control-sm', min: 2000, max: 2100, 'aria-label': t('.year'))
+            %td{style: 'width: 8em'}
+              = text_field_tag("rows[#{i}][amount]", row.amount && format('%.2f', row.amount).tr('.', ','), class: 'form-control form-control-sm text-end', 'aria-label': t('.amount'))
+  .mb-3
+    = label_tag(:note, t('.note'), class: 'form-label')
+    = text_field_tag(:note, nil, class: 'form-control form-control-sm')
+  = submit_tag(t('.submit'), class: 'btn btn-primary')
